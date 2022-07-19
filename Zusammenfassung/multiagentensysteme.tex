@@ -17,6 +17,7 @@ Adjazentmatrix $A$.
 
 \section{Leader-Follower Zustandssynchronisierung}
 \paragraph{Leader-Follower-Matrix}
+\label{par:leader_follower_matrix}
 \begin{equation}
     \tag{Leader-Follower-Matrix}
     H = L_\mathcal{G} + L_0 \in \mathbb{R}^{N\times N}
@@ -68,8 +69,74 @@ diffusiven Kopplung wieder:
 \end{align}
 Wobei $e_i^T$ ein Zeilenvektor ist mit $1$ an Stelle $i$, sonst $0$.
 
-\subsection{Entwurf Netzwerkregler}
+Aggregieren der $\bar{u}_i$ Elemente ergibt
+\begin{equation}
+    \bar{u} = (H \otimes I_n)\varepsilon
+\end{equation}
 
+\subsection{Fehlersystem mit diffusiver Kopplung}
+Nun lässt sich eine Rückführung definieren:
+\begin{equation}
+    u=-\tilde{K}(H\otimes I_n)\varepsilon
+\end{equation}
+wobei $\tilde{K}$ eine Blockmatrix ist mit den Rückführmatrizen $K_i$ der einzelnen
+Agenten auf der Hauptdiagonalen.
+
+Das geregelte Fehlersystem ist nun
+\begin{equation}
+    \dot{\varepsilon} = (I_N \otimes A - (I_N \otimes B) \tilde{K}(H \otimes I_n))\varepsilon
+    \label{eqn:fehlersystem_geregelt_ktilde}
+\end{equation}
+
+\subsection{Simultanes Stabilisierungsproblem}
+Im folgenden wird für jeden Folgeagenten die Gleiche Rückführmatrix $K$ verwendet.
+Das bedeutet, dass diese Matrix \emph{simultan} jeden Folgeagenten stabilisieren
+muss:
+\begin{equation}
+    \tilde{K}=I_N \otimes K
+\end{equation}
+Das Stellgesetz lautet nun
+\begin{equation}
+    u=-(I_N \otimes K) (H \otimes I_n)\varepsilon = -(H \otimes K)\varepsilon
+\end{equation}
+
+Mit dem Ziel, die leader-follower Matrix $H$ auf Schursche Normalform zu bringen,
+wird die Transformation
+\begin{align}
+    \tilde{\varepsilon} &= (T^H \otimes I_n)\epsilon \\
+    \varepsilon &= (T \otimes I_n)\tilde{\varepsilon}
+\end{align}
+eingeführt.
+
+Eingesetzt in die Gleichung des geregelten Fehlersystems \ref{eqn:fehlersystem_geregelt_ktilde}
+ergibt sich:
+\begin{align}
+    \dot{\tilde{\varepsilon}} &=((T^H \otimes I_n)(I_N \otimes A)(T \otimes I_n) - (T^H \otimes I_n)(I_N \otimes B)\tilde{K}(H \otimes I_n)(T \otimes I_n)) \tilde{\varepsilon} \\
+    &= (I_N \otimes A - H_\urcorner \otimes BK)\tilde{\varepsilon} \\
+    &= \tilde{A}\tilde{\varepsilon} 
+\end{align}
+mit $H_\urcorner = T^H H T$.
+
+Da die Diagonalelemente von $H_\urcorner$ gerade dessen Eigenwerte, und damit auch die
+Eigenwerte von $H$ sind (Matrizen sind Ähnlich), lassen sich die Blockdiagonalelemente von
+$\tilde{A}$ darstellen als:
+\begin{equation}
+    \tilde{A}_{ii} = A-\lambda(H)BK
+\end{equation}
+
+$K$ muss nun also so bestimmt werden, dass diese $N$ unterschiedlichen Matrizen simultan
+zu Hurwitz-Matrizen ($\operatorname{Re}\lambda < 0)$ macht.
+\todo[inline]{Fragestunde: Sind die Elemente oberhalb der Diagonalen relevant?}
+
+Notwendige Bedingung dafür ist $\det H \neq 0$ (Siehe \ref{par:leader_follower_matrix}, das
+kann man evtl am Graph sehen).
+\todo[inline]{Bedingung nachvollziehen, Seite 4-18}
+
+Der Riccati-Entwurf kann die simultane Stabilisierung in diesem fall immer lösen,
+was das ganze zur hinreichenden Bedingung macht.
+
+\subsection{Entwurf Netzwerkregler}
+\todo[inline]{Das hier noch mal überarbeiten, nachdem es jetzt alles oberhalb gibt}
 Ziel ist ein Netzwerkregler der Form
 \begin{equation}
     u_i = -\sum_{j=1}^N a_{ij} (Kx_i - Kx_j) - a_{i0} (Kx_i - Kx_0)
@@ -109,6 +176,8 @@ Dann können $N$ unterschiedliche Rückführmatrizen bestimmt werden.
 
 \subsection{Analyse Netzwerkregler}
 \todo[inline]{Synchronisierungs-Eigenwerte: Blatt 3g}
+
+
 
 \section{Leaderless Zustandssynchronisierung}
 \paragraph{Folgefehlerdynamik}
@@ -150,7 +219,28 @@ folgt dann nach Transformation auf Synchronisierungskoordinaten die
 
 \todo[inline]{Nachvollziehen, vgl mit leader-follower}
 
+\subsection{Entwurf Netzwerkregler}
 
+\subsubsection{Bedingung}
+Damit sich eine Rückführmatrix $K$ bestimmen lässt, muss gelten
+\begin{equation}
+    \operatorname{Re} \lambda_i(L_{22}) > 0
+\end{equation}
+bzw
+\begin{equation}
+    \det L_{22} \neq 0
+\end{equation}
+wobei $L_{22}$ folgt aus
+\begin{equation}
+    \Theta L_\mathcal{G} \Theta^{-1} = \begin{bmatrix}
+        0 & \Theta L_\mathcal{G}M
+    \end{bmatrix}
+    = \begin{bmatrix}
+        0 & l_{12}^T \\
+        0_{N-1} & L_{22}
+    \end{bmatrix}
+\end{equation}
 
+$\det L_{22} \neq 0$ folgt auch direkt daraus, dass der Graph zusammenhängend ist.
 
 \section{Leaderless Ausgangssynchronisierung}
