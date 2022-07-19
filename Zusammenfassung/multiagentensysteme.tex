@@ -1,0 +1,105 @@
+\section{Graphentheorie}
+\paragraph{Gradmatrix}
+Die Gradmatrix $D_\mathcal{G}$ enthält auf der Hauptdiagonalen den Eingangsgrad des jeweiligen Knotens.
+
+\paragraph{Adjazenzmatrix}
+Die Adjazenzmatrix $A_\mathcal{G}$ enthält im Element $a_{ij}$
+das Kantengewicht der Kante $(j \rightarrow i)$.
+
+\paragraph{Laplacematrix}
+\begin{equation}
+    \tag{Laplacematrix}
+    L_\mathcal{G} = D_\mathcal{G} - A_\mathcal{G}
+    \label{eqn:laplace_matrix}
+\end{equation}
+Die Laplacematrix berechnet sich aus Gradmatrix $D$ und
+Adjazentmatrix $A$.
+
+\section{Leader-Follower Zustandssynchronisierung}
+\paragraph{Leader-Follower-Matrix}
+\begin{equation}
+    \tag{Leader-Follower-Matrix}
+    H = L_\mathcal{G} + L_0 \in \mathbb{R}^{N\times N}
+    \label{eqn:lf_matrix}
+\end{equation}
+$L_0$ ist dabei die Diagonalmatrix mit $L_{0,ii}=a_{i0}$.
+
+\subsection{Entwurf Netzwerkregler}
+
+Ziel ist ein Netzwerkregler der Form
+\begin{equation}
+    u_i = -\sum_{j=1}^N a_{ij} (Kx_i - Kx_j) - a_{i0} (Kx_i - Kx_0)
+\end{equation}
+Die Rückführmatrix $K$ bestimmt sich durch
+\begin{equation}
+    K=c R^{-1} B^T P
+\end{equation}
+mit $P$ Lösung der algebraischen Riccati-Gleichung
+\begin{equation}
+    \tag{ARE}
+    A^T P + P A - P B R^{-1} B^T P + Q = 0
+\end{equation}
+wobei $Q \in \mathbb{R}^{n\times n}$ und $R \in \mathbb{R}^{n\times n}$
+positiv definit, mit $n$ Dimension des Zustandes und $p$ Dimension des
+Inputs.
+
+Für den Parameter $c$ muss gelten
+\begin{equation}
+    c \geq \frac{1}{2 \cdot \min_{i=1,\ldots,N} \operatorname{Re} \lambda_i(H)}
+\end{equation}
+
+\todo[inline]{Fertig machen (Blatt3)?}
+
+\subsubsection{Sonderfall: Reduzible Kommunikationstopologie}
+Wenn die Leader-Follower-Matrix als untere ($r\times r$) Blockdiagonalmatrix
+dargestellt werden kann (evtl nach Ändern der Nummerierung der Agenten),
+können $r$ unabhängige Stabilisierungsprobleme mit $r$ unterschiedlichen
+Rückführmatrizen gelöst werden.
+
+\subsubsection{Sonderfall: Kreisfreie Kommunikationstopologie}
+Eine kreisfreie Topologie erlaubt umnummerierung sodass die
+Leader-Follower-Matrix eine untere ($N\times N$) Dreiecksmatrix ist.
+
+Dann können $N$ unterschiedliche Rückführmatrizen bestimmt werden.
+\todo[inline]{Kreisfreie Kommunikationstopologie, Eigenwertvorgabe: Blatt 3f}
+
+\subsection{Analyse Netzwerkregler}
+\todo[inline]{Synchronisierungs-Eigenwerte: Blatt 3g}
+
+\section{Leaderless Zustandssynchronisierung}
+\paragraph{Folgefehlerdynamik}
+Es gibt zwar keinen Führungsagenten, aber wir können einen Folgefehler
+bezüglich eines ausgewählten Agentens ($x_1$) definieren.
+Damit ergeben sich die \emph{Synchronisierungskoordinaten}:
+\begin{equation}
+    \tilde{x} = \begin{bmatrix}
+        x_1 \\
+        \varepsilon
+    \end{bmatrix}
+    = \begin{bmatrix}
+        x_1 \\
+        x_2 - x_1 \\
+        \vdots \\
+        x_N - x_1
+    \end{bmatrix}
+    = \left(\begin{bmatrix}
+        1 & 0 \\
+        -1_{N-1} & I_{N-1}
+    \end{bmatrix}
+    \otimes I_n
+    \right) x
+    = (\Theta \otimes I_n)x
+\end{equation}
+(Die Einträge $1$, $0$, und $-1_{N-1}$ in $\Theta$ sind hierbei als skalar bzw Zeilen- und Spaltenvektor zu verstehen.)
+
+Aus der Systemdynamik
+\begin{equation}
+    \dot{x} = (I_N \otimes A) x + (I_N \otimes B)u
+\end{equation}
+folgt dann nach Transformation auf Synchronisierungskoordinaten die
+\emph{Folgefehlerdynamik}:
+\begin{equation}
+    \dot{\tilde{x}} = (I_N \otimes A) \tilde{x} + (\Theta \otimes B)u
+\end{equation}
+
+\section{Leaderless Ausgangssynchronisierung}

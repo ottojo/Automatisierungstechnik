@@ -1,0 +1,58 @@
+\section{Zustandsbeschreibung von Petri-Netzen}
+
+Der Zustand eines Petri-Netzes wird durch einen \emph{Markierungsvektor} $m$ angegeben.
+Das ist bei uns ein binärer Vektor der angibt welche Stellen mit Marken belegt sind.
+
+Ein Schaltvorgang wird mit einem \emph{Transitionsvektor} $t$ angegeben.
+Der Transitionsvektor enthält einen $1$-Eintrag für die schaltende Transition.
+
+Die Netzmatrix beschreibt Spaltenweise den Markenfluss beim Schalten der Transitionen:
+
+\begin{equation}
+    N =
+    \begin{blockarray}{ccc}
+        & t1 & t2 \\
+        \begin{block}{c(cc)}
+            s1 & -1 & -1 \\
+            s2 &  1 &  0 \\
+            s3 &  0 &  1 \\
+        \end{block}
+    \end{blockarray}
+\end{equation}
+
+Damit kann man dann die Zustandsgleichung aufstellen:
+\begin{equation}
+    m(k+1) = m(k) + N t(k)
+\end{equation}
+
+Mit der wichtigen Nebenbedingung
+\begin{equation}
+    t(k) \in \mathcal{T}_\text{akt}(m(k), u(k))
+\end{equation}
+welche fordert, dass die Transition aktiviert sein muss, also alle
+Prästellen markiert und alle Poststellen unmarkiert sind, und die Transition
+durch den Eingang $u(k)$ "freigeschaltet" ist.
+
+\section{Analyse von Petri-Netzen}
+\subsection{Zyklen: T-Invarianten}
+Ein Zyklus kann so definiert werden:
+\begin{equation}
+    m(k_z) = m(0) + N \sum_{\kappa=0}^{k_z-1} t(\kappa) \overset{!}{=} m(0)
+\end{equation}
+Oder äquivalent
+\begin{equation}
+    N \sum_{\kappa=0}^{k_z-1} t(\kappa) = N i_T = 0
+\end{equation}
+
+Wenn jetzt also so ein passendes $i_T$ (ganzzahlig, $>0$) existiert,
+nennt man das \emph{T-Invariante}.
+Wenn zusätzlich die T-Invariante als gültige Abfolge von Transition darstellbar ist,
+folgt daraus dass das Petri-Netz einen Zyklus besitzt.
+
+\subsection{Lebendigkeit}
+Eine \emph{tote Markierung} ist eine Markierung, in welcher keine Marken mehr fließen.
+Wenn keine toten Markierungen auftreten, ist das Netz lebendig.
+
+Jedes lebendige Petri-Netz besitzt mindestens einen Zyklus und damit eine T-Invariante.
+
+\subsection{Konstante Markensumme: S-Invarianten}
