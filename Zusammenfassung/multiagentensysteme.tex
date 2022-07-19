@@ -24,6 +24,50 @@ Adjazentmatrix $A$.
 \end{equation}
 $L_0$ ist dabei die Diagonalmatrix mit $L_{0,ii}=a_{i0}$.
 
+Es gilt $\det(H) \neq 0$ und $\operatorname{Re}\lambda_i(H) > 0$,
+wenn der erweiterte Graph einen Spannbaum mit dem Führungsagenten als
+Wurzel besitzt.
+
+\subsection{Folgefehler}
+Der Folgefehler ist definiert als:
+\begin{equation}
+    \varepsilon = \begin{bmatrix}
+        x_1-x_0 \\
+        \vdots \\
+        x_N-x_0
+    \end{bmatrix}
+    = x-1_N \otimes x_0
+\end{equation}
+wobei $x_i$ der Zustandsvektor des Agenten $i$ ist.
+Mit ein bisschen einsetzen von $\dot{x} = (I_N \otimes A)x + (I_N \otimes B)u$
+und Umformen kommt man daraus auf die \emph{Folgefehlerdynamik}
+\begin{equation}
+    \dot{\varepsilon} = (I_N \otimes A)\varepsilon + (I_N \otimes B)u
+\end{equation}
+
+Mit einem Regler $u=-(I_N \otimes K)\varepsilon$  ergibt sich das
+\emph{geregelte Folgefehlersystem}
+\begin{equation}
+    \dot{\varepsilon} = (I_N \otimes (A-BK))\varepsilon
+\end{equation}
+
+Aufgabe ist jetzt $K$ so zu bestimmen dass das geregelte Fehlersystem unseren
+Anforderungen (exponentielle Stabilität) entspricht.
+
+Dies beachtet allerdings noch nicht die Netzwerktopologie.
+Das macht im nächsten Abschnitt die
+
+\subsection{Diffusive Kopplung}
+Im Hinblick auf die Netzwerktopologie findet sich der Folgefehler in der
+diffusiven Kopplung wieder:
+
+\begin{align}
+    \bar{u}_i &= \sum_{j=1}^N a_{ij} (x_i-x_j) + a_{i0}(x_ix_0) \\
+    &= \sum_{j=1}^N a_{ij} (\varepsilon_i - \varepsilon_j) + a_{i0} \varepsilon_i \\
+    &= \left(e_i^T\underbrace{(L_G+L_0)}_H \otimes I_n\right)\varepsilon
+\end{align}
+Wobei $e_i^T$ ein Zeilenvektor ist mit $1$ an Stelle $i$, sonst $0$.
+
 \subsection{Entwurf Netzwerkregler}
 
 Ziel ist ein Netzwerkregler der Form
@@ -101,5 +145,12 @@ folgt dann nach Transformation auf Synchronisierungskoordinaten die
 \begin{equation}
     \dot{\tilde{x}} = (I_N \otimes A) \tilde{x} + (\Theta \otimes B)u
 \end{equation}
+
+\paragraph{Stellgesetz}
+
+\todo[inline]{Nachvollziehen, vgl mit leader-follower}
+
+
+
 
 \section{Leaderless Ausgangssynchronisierung}
