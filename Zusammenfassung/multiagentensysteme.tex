@@ -136,6 +136,7 @@ Der Riccati-Entwurf kann die simultane Stabilisierung in diesem fall immer löse
 was das ganze zur hinreichenden Bedingung macht.
 
 \subsection{Entwurf Netzwerkregler}
+\label{sec:lf_nw_regler_entwurf}
 \todo[inline]{Das hier noch mal überarbeiten, nachdem es jetzt alles oberhalb gibt}
 Ziel ist ein Netzwerkregler der Form
 \begin{equation}
@@ -219,6 +220,23 @@ folgt dann nach Transformation auf Synchronisierungskoordinaten die
 
 \todo[inline]{Nachvollziehen, vgl mit leader-follower}
 
+\subsection{Synchronisierungstrajektorie}
+Der Netzwerkregler stellt sicher dass die Agenten gegen die Synchronisierungstrajektorie
+konvergieren (auch "virtueller Führungsagent"):
+\begin{align}
+    \dot{x}_s &= Ax_s \\
+    x_s(0) &= (l^T \otimes I_n) x(0)
+\end{align}
+Der Vektor $l \in \mathbb{R}^N$ gewichtet dabei die Anfangszustände der einzelnen
+Agenten.
+Zur Bestimmung genügen die constraints 
+\begin{align}
+    l^T 1_N &= 1 \\
+    l^T L_\mathcal{G} &= 0
+\end{align}
+Dies folgt von der Herleitung über die \emph{invariante Trajektorie}, für die
+Unabhängigkeit von $K$ gefordert wird.
+
 \subsection{Entwurf Netzwerkregler}
 
 \subsubsection{Bedingung}
@@ -242,5 +260,11 @@ wobei $L_{22}$ folgt aus
 \end{equation}
 
 $\det L_{22} \neq 0$ folgt auch direkt daraus, dass der Graph zusammenhängend ist.
+
+\subsubsection{Entwurf}
+Bestimmung von $K$ wie in \ref{sec:lf_nw_regler_entwurf},
+aber mit $L_{22}$ statt H.
+
+
 
 \section{Leaderless Ausgangssynchronisierung}
