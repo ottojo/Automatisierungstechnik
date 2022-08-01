@@ -103,7 +103,7 @@ Das Stellgesetz lautet nun
 Mit dem Ziel, die leader-follower Matrix $H$ auf Schursche Normalform zu bringen,
 wird die Transformation
 \begin{align}
-    \tilde{\varepsilon} &= (T^H \otimes I_n)\epsilon \\
+    \tilde{\varepsilon} &= (T^H \otimes I_n)\varepsilon \\
     \varepsilon &= (T \otimes I_n)\tilde{\varepsilon}
 \end{align}
 eingeführt.
@@ -268,3 +268,133 @@ aber mit $L_{22}$ statt H.
 
 
 \section{Leaderless Ausgangssynchronisierung}
+
+
+
+\section{Synchronisierung heterogener Multiagentensysteme}
+
+Um das heterogene Multiagentensystem zu synchronisieren, müssen die Agenten das \emph{kooperative Interne-Modell-Pronzip} erfüllen:
+
+Gemeinsame Teildynamik $A_s$ mit Ausgang $C_s$.
+\begin{equation}
+    T_i A_i T_i^{-1} = \begin{bmatrix}
+        A_s & * \\
+        0 & *
+    \end{bmatrix}
+\end{equation}
+
+\begin{equation}
+    C_i T_i^{-1} = \begin{bmatrix}
+        C_s & *
+    \end{bmatrix}
+\end{equation}
+
+Bem: Notwendig (aber nicht hinreichend) dafür ist, dass die Agenten gleiche Eigenwerte haben.
+
+Wenn das nicht erfüllt ist, gibt es zwei Lösungsmöglichkeiten:
+\begin{enumerate}
+    \item Dynamik mit Regler mitberücksichtigen (kooperativ angeregtes internes Modell)
+    \item Kooperative Führungsbeobachter
+\end{enumerate}
+
+\subsection{Kooperative Führungsbeobachter: Leader-Follower}
+
+Die Synchronisierungstrajektorie wird vom Führungsagenten vorgegeben, beschrieben
+durch Signalmodell:
+\begin{align}
+    \dot{v_0} &= S_w v_0 \\
+    w &= Q_w v_0
+\end{align}
+(Anforderung: $(Q_w, S_w)$ beobachtbar)
+
+Daraus resultiert das Führungssignal $w$.
+Diesem Signal sollen die Ausgänge der Agenten folgen.
+
+Es wird nun ein Beobachter entworfen, der für die Agenten die Führungsagentenzustände rekonstruiert.
+
+\begin{align}
+    \dot{v}_i &= S_w v_i \\
+    w_i &= Q_w v_i
+\end{align}
+
+Dafür werden an den Agenten Führungsbeobachter entworfen, die den Zustand des
+Führungsagenten rekonstruieren ($\hat{v_i}$).
+Bei informierten Agenten ist das ein klassischer Beobachter:
+
+\begin{equation}
+    \dot{\hat{v}}_i = S_w \hat{v}_i + L_i a_{i0} (w-\hat{w}_i)
+\end{equation}
+(Die Beobachterrückführmatrizen $L_i$ lassen sich unterschiedlich wählen.)
+
+Bei nichtinformierten Agenten ein kooperativer Führungsbeobachter, der dann durch diffusive Kopplung mit den anderen Agenten kommuniziert:
+
+\begin{equation}
+    \dot{\hat{v}}_i = S_w \hat{v}_i + L \sum_{j=1}^N a_{ij} (\hat{w}_j - \hat{w}_i)
+\end{equation}
+(Gemeinsame Beobachterrückführmatrix $L$.)
+\todo[inline]{i-j oder j-i? skript und übung unterschiedlich}
+
+
+Dann wird eine Führungsgrößenaufschaltung konstruiert, die eine Zustandsrückführung $K$
+der Agentenzustände und eine Aufschaltung $M$ des rekonstruieren
+Führungsagentenzustands enthält:
+
+\begin{equation}
+    u_i = -K_i x_i + M_i \hat{v}_i
+\end{equation}
+
+\subsubsection{Informierte Agenten}
+Hier wird ein lokaler Führungsbeobachter entworfen.
+Dafür betrachtet man den globalen Beobachtungsfehler $e_i = v_0 - \hat{v}_i$:
+\begin{equation}
+    \dot{e}_i = (S_w - L_i Q_w) e_i
+\end{equation}
+Daraus dass $(Q_w, S_w)$ beobachtbar ist, kann immer ein passendes $L_i$ bestimmt werden.
+\todo[inline]{Bestimmung $L_i$}
+
+\subsubsection{Nichtinformierte Agenten}
+Hierfür wird der kooperative Führungsbeobachter entworfen.
+Dafür betrachtet man den globalen Beobachtungsfehler $e_i = v_0 - \hat{v}_i$:
+\begin{align}
+    \dot{e}_i &= S_w e_i - \sum_{j=1}^N a_{ij} L Q_w (\hat{v}_j - \hat{v}_i) \\
+    &= S_w e_i - \sum_{j=1}^N a_{ij} L Q_w (e_i - e_j)
+\end{align}
+\todo[inline]{Bestimmung $L$}
+
+Zur Bestimmung von $L$ bildet man die Laplacematrix des erweiterten Graphen in Blockmatrixform:
+
+\begin{equation}
+    L_{\overbar{\mathcal{G}}} = \begin{bmatrix}
+        0 & 0_{1\times M} & 0_{1 \times N-M}\\
+        L_{21} & L_{22} & 0_{M \times N-M} \\
+        0_{N-M \times 1} & L_{32} & L_{33}
+    \end{bmatrix}
+\end{equation}
+
+Dabei ist $M$ die Anzahl informierter Agenten, $N$ die Anzahl Agenten, und $N-M$ die Anzahl
+Nichtinformierter Agenten.
+\begin{itemize}
+    \item Nullzeile: Keine Verbindungen zum Führungsagenten
+    \item $L_{21}$: Verbindungen Führungsagent $\rightarrow$ Informierte Agenten
+    \item $L_{22}$: Verbindungen zwischen informierten Agenten
+    \item $0_{M \times N-M}$: Keine Verbindungen Nichtinformierte Agenten $\rightarrow$ Informierte Agenten \todo{muss das so?}
+    \item $0_{N-M \times 1}$: Keine Verbindungen Führungsagent $\rightarrow$ Nichtinformierte Agenten
+    \item $L_{32}$: Verbindungen Informierte Agenten $\rightarrow$ Nichtinformierte Agenten
+    \item $L_{33}$: Verbindungen zwischen nichtinformierten Agenten
+\end{itemize}
+
+Die Rückführmatrix $L$ bestimmt sich dann als
+\begin{equation}
+    L= \bar{c} \bar{P} Q_w^T \bar{R}^{-1}
+\end{equation}
+mit
+\begin{equation}
+    \bar{c} \geq \frac{1}{2 \min_{i}\operatorname{Re} \lambda_i(L_{33})}
+\end{equation}
+und $\bar{P}$ als Lösung der ARE
+\begin{equation}
+    S_w \bar{P} + \bar{P} S_w^T - \bar{P} Q_w^T \bar{R}^{-1} Q_w \bar{P} + \bar{Q} = 0
+\end{equation}
+
+
+Wenn $\overbar{\mathcal{G}}$ den Führungsagenten als Wurzelknoten enthält 
