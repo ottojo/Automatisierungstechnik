@@ -24,6 +24,9 @@ Adjazentmatrix $A$.
     \label{eqn:lf_matrix}
 \end{equation}
 $L_0$ ist dabei die Diagonalmatrix mit $L_{0,ii}=a_{i0}$.
+$L_\mathcal{G}$ enthält den Führungsagenten nicht!
+$H$ ist damit auch der Teil von $L_{\overbar{\mathcal{G}}}$ ohne die erste Zeile
+und Spalte.
 
 Es gilt $\det(H) \neq 0$ und $\operatorname{Re}\lambda_i(H) > 0$,
 wenn der erweiterte Graph einen Spannbaum mit dem Führungsagenten als
@@ -413,12 +416,13 @@ Führungsagentenzustands enthält:
 
 \begin{align}
     u_i &= \underbrace{-K_i (x_i - \Pi_i v_0)}_\text{Folgeregler}
-    + \underbrace{\Gamma_i v_i}_\text{Steuerung} \\
+    + \underbrace{\Gamma_i v_0}_\text{Steuerung} \\
     &= -K_i x_i + (K_i \Pi_i + \Gamma_i) v_0 \\
     &= -K_i x_i + M_i v_0
 \end{align}
 
-Dabei muss $A_i - B_i B_i$ Hurwitz Matrix sein und es muss gelten:
+Dabei muss $A_i - B_i K_i$ Hurwitz Matrix sein (z.B. Eigenwertvorgabe) und es muss
+gelten:
 \begin{align}
     \Pi_i S_w - A_i \Pi_i &= B_i \Gamma_i \\
     C_i \Pi_i &= Q_w
