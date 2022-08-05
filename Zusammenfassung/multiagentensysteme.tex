@@ -439,3 +439,42 @@ Für alle Eigenwerte $s$ von $S_w$ muss gelten:
     \end{bmatrix}
     \neq 0
 \end{equation}
+
+\subsection{Schaltende Netze}
+
+Schaltende Netzte modellieren wir dadurch dass wir nicht den konstanten
+Graphen $\mathcal{G}$ betrachten sondern den Graphen $\mathcal{G}_{\sigma(t)}$, wobei $\sigma(t)$ zu jedem Zeitpunkt den momentan aktiven Graphen
+aus einer endlichen Menge an Graphen auswählt.
+
+Hier schränken wir $\sigma(t)$ noch soweit ein dass ein Graph mindestens
+für die Verweildauer $\tau$ aktiv bleibt, in dieser Zeit ändert sich
+$\sigma(t)$ also nicht.
+Das Schaltsignal $\sigma(t)$ wird als bekannt und deterministisch 
+angenommen.
+
+Der \emph{Vereinigungsgraph} $\tilde{\mathcal{G}}$ beinhaltet die Kanten
+aller Graphen in der Graphenmenge.
+Die Kantengewichte werden dabei addiert.
+
+Zur Synchronisierung wird ein kooperativer Führungsbeobachter genutzt,
+das Problem wird auf die leader-follower Zustandssynchronisierung
+des homogenen Führungsmodells zurückgeführt.
+
+\begin{equation}
+    \dot{\hat{v}}_i = S_w \hat{v}_i + \mu \left( \sum_{j=1}^N a_{ij}(t)
+    (\hat{v}_j - \hat{v}_i) + a_{i0}(t)(v_0 - \hat{v}_i) \right)   
+\end{equation}
+
+Hier wird eine gemeinsame Verstärkung $\mu >0$ gewählt und informierte
+und Nichtinformierte Agenten gemeinsam betrachtet.
+\todo{ist das wie oben?}
+
+Für den Folgefehler $e_i = \hat{v}_i - v_0$ ergibt sich nach aggregation
+\begin{equation}
+    \dot{e} = (I_N \otimes S_w - \mu H_{\sigma(t)} \otimes I_{n_w}) e
+\end{equation}
+
+Die Folgefehlerdynamik ist stabil für alle $\mu > 0$ wenn der Vereinigungsgraph
+mit Agent 0 als einzigem Wurzelknoten zusammenhängend ist und
+$\operatorname{Re}\lambda(S_w) \leq 0$.
+
