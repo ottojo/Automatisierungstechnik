@@ -6,6 +6,22 @@ Die Gradmatrix $D_\mathcal{G}$ enthält auf der Hauptdiagonalen den Eingangsgrad
 Die Adjazenzmatrix $A_\mathcal{G}$ enthält im Element $a_{ij}$
 das Kantengewicht der Kante $(j \rightarrow i)$.
 
+Die Adjazenzmatrix eines nicht stark zusammenhängenden Graphens ist reduzibel.
+Eine Matrix ist reduzibel, wenn mittels Permutationsmatrix $P$ gilt
+\begin{equation}
+    PMP^T = \begin{bmatrix}
+        M_{11} & 0 \\
+        M_{12} & M_{22}
+    \end{bmatrix}
+\end{equation}
+mit quadratischem $M_{11}$.
+Permutationsmatrix bedeutet dass $PM$ Zeilen tauscht, und $MP^T$ Spalten tauscht.
+
+Wenn $PA_\mathcal{G}P^T$ eine untere Blockdreiecksmatrix ist mit irreduziblen
+Diagonalblockmatrizen, entspricht das der \emph{Frobeniusform}.
+Die Diagonalblockmatrizen beschrieben dann stark zusammenhängende Teilgraphen.
+
+
 \paragraph{Laplacematrix}
 \begin{equation}
     \tag{Laplacematrix}
@@ -13,7 +29,43 @@ das Kantengewicht der Kante $(j \rightarrow i)$.
     \label{eqn:laplace_matrix}
 \end{equation}
 Die Laplacematrix berechnet sich aus Gradmatrix $D$ und
-Adjazentmatrix $A$.
+Adjazenzmatrix $A$.
+
+\begin{itemize}
+    \item $L_\mathcal{G}$ hat nur einfachen EW 0 $\iff$ Graph zusammenhängend
+    \item $\operatorname{rang} L_\mathcal{G} = N-1$ ($N$ Knoten) $\iff$ Graph zusammenhängend
+    \item Die Aussagen bzgl. Reduktion der Adjazenzmatrix gelten auch für die Laplacematrix.
+\end{itemize}
+
+\paragraph{Inzidenzmatrix}
+Elemente $n_{ij}$ der Inzidenzmatrix $N_\mathcal{G} \in \{-1,0,1\}^{N \times M}$ eines Graphen mit $N$ Knoten und $M$ Kanten:
+\begin{equation}
+    n_{ij} = \begin{cases}
+        -1, & \text{wenn Kante $j$ im Knoten $i$ startet} \\
+        1,  & \text{wenn Kante $j$ im Knoten $i$ endet} \\
+        0,  & \text{sonst}
+    \end{cases}
+\end{equation}
+
+\paragraph{Kreisfrei}
+\todo[inline]{def kreisfrei}
+
+\paragraph{Zusammenhängend}
+Ein Wurzelknoten existiert.
+\begin{itemize}
+    \item $\iff$ Adjazenzmatrix $A_\mathcal{G}$ irreduzibel.
+    \item $\iff$ $L_\mathcal{G}$ hat nur einfachen EW 0
+\end{itemize}
+
+
+\paragraph{Stark Zusammenhängend}
+Jeder Knoten ist Wurzelknoten, es gibt von jedem Knoten einen Pfad zu
+jedem anderen Knoten.
+$\iff$ Laplacematrix $L_\mathcal{G}$ irreduzibel.
+
+
+\paragraph{Vollständig Zusammenhängend}
+= fully connected.
 
 \section{Leader-Follower Zustandssynchronisierung}
 \paragraph{Leader-Follower-Matrix}
@@ -181,8 +233,6 @@ Dann können $N$ unterschiedliche Rückführmatrizen bestimmt werden.
 \subsection{Analyse Netzwerkregler}
 \todo[inline]{Synchronisierungs-Eigenwerte: Blatt 3g}
 
-
-
 \section{Leaderless Zustandssynchronisierung}
 \paragraph{Folgefehlerdynamik}
 Es gibt zwar keinen Führungsagenten, aber wir können einen Folgefehler
@@ -208,6 +258,13 @@ Damit ergeben sich die \emph{Synchronisierungskoordinaten}:
     = (\Theta \otimes I_n)x
 \end{equation}
 (Die Einträge $1$, $0$, und $-1_{N-1}$ in $\Theta$ sind hierbei als skalar bzw Zeilen- und Spaltenvektor zu verstehen.)
+
+\begin{equation}
+    \Theta^{-1} = \begin{bmatrix}
+        1 & 0 \\
+        1_{N-1} & I_{N-1}
+    \end{bmatrix}    
+\end{equation}
 
 Aus der Systemdynamik
 \begin{equation}
@@ -271,6 +328,28 @@ aber mit $L_{22}$ statt H.
 
 
 \section{Leaderless Ausgangssynchronisierung}
+\subsection{Kooperativ angeregtes Internes Modell}
+Hier gibt es statt Führungsagent ein Führungsmodell:
+\begin{align}
+    \dot{v}_w &= S_w v_w \\
+    w &= Q_w v_w
+\end{align}
+
+
+Und bei Bedarf Störmodell
+\begin{align}
+    d = P_d v
+\end{align}
+
+Der Netzwerkregler für die Ausgangssynchronisierung beinhaltet die
+Dynamik des Führungsmodells und aller Störmodelle.
+Dafür baut man das kooperativ angeregtes interne Modell:
+\begin{equation}
+    \dot{\bar{v}}_i = S^*\bar{v}_i + B_y\left(\sum_{j=1}^N a_{ij} (y_i-y_j) + a_{i0} (y_i-w) \right)
+\end{equation}
+
+
+\todo[inline]{Internes Modell}
 
 
 
@@ -299,6 +378,7 @@ Wenn das nicht erfüllt ist, gibt es zwei Lösungsmöglichkeiten:
     \item Dynamik mit Regler mitberücksichtigen (kooperativ angeregtes internes Modell)
     \item Kooperative Führungsbeobachter
 \end{enumerate}
+
 
 \subsection{Kooperative Führungsbeobachter: Leader-Follower}
 
