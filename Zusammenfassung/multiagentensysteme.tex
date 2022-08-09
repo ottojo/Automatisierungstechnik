@@ -67,6 +67,32 @@ $\iff$ Laplacematrix $L_\mathcal{G}$ irreduzibel.
 \paragraph{Vollständig Zusammenhängend}
 = fully connected.
 
+
+\section{Systemtheorie}
+
+\subsection{Steuerbarkeit}
+Der Eigentwert $\lambda_i$ von $A$ ist steuerbar wenn gilt
+\begin{equation}
+    \operatorname{rang}\begin{bmatrix}
+        A-\lambda_i I & B
+    \end{bmatrix} = n
+\end{equation}
+Wobei $A \in \mathbb{R}^{n\times n}$.
+Sind alle Eigenwerte in der rechten Halbebene steuerbar, ist $(A, B)$
+steuerbar bzw stabilisierbar.
+
+\subsection{Schur Zerlegung}
+Quadratische Matrix $A$:
+\begin{equation}
+    R=U^H A U = 
+\end{equation}
+\begin{itemize}
+    \item R ist obere Dreiecksmatrix ($\implies$ EW auf Hauptdiagonalen)
+    \item Die Matrizen $A$ und $R$ sind Ähnlich, haben also die gleichen Eigenwerte
+\end{itemize}
+
+Mit Blockmatrizen/Kronecker-Produkten funktioniert das auch.
+
 \section{Leader-Follower Zustandssynchronisierung}
 \paragraph{Leader-Follower-Matrix}
 \label{par:leader_follower_matrix}
@@ -77,8 +103,6 @@ $\iff$ Laplacematrix $L_\mathcal{G}$ irreduzibel.
 \end{equation}
 $L_0$ ist dabei die Diagonalmatrix mit $L_{0,ii}=a_{i0}$.
 $L_\mathcal{G}$ enthält den Führungsagenten nicht!
-$H$ ist damit auch der Teil von $L_{\overbar{\mathcal{G}}}$ ohne die erste Zeile
-und Spalte.
 
 Es gilt $\det(H) \neq 0$ und $\operatorname{Re}\lambda_i(H) > 0$,
 wenn der erweiterte Graph einen Spannbaum mit dem Führungsagenten als
@@ -326,7 +350,11 @@ Bestimmung von $K$ wie in \ref{sec:lf_nw_regler_entwurf},
 aber mit $L_{22}$ statt H.
 
 
+\pagebreak
+\section{Leader-Follower Ausgangssynchronisierung}
+\todo[inline]{Leader-Follower Ausgangssynchronisierung}
 
+\pagebreak
 \section{Leaderless Ausgangssynchronisierung}
 \subsection{Kooperativ angeregtes Internes Modell}
 Hier gibt es statt Führungsagent ein Führungsmodell:
@@ -347,12 +375,41 @@ Dafür baut man das kooperativ angeregtes interne Modell:
 \begin{equation}
     \dot{\bar{v}}_i = S^*\bar{v}_i + B_y\left(\sum_{j=1}^N a_{ij} (y_i-y_j) + a_{i0} (y_i-w) \right)
 \end{equation}
+\todo{das ist nicht leaderless...}
 
 
 \todo[inline]{Internes Modell}
 
+Für die Stabilisierung setzt man das Stellgesetz an in der Form
+\begin{equation}
+    u=\underbrace{-(I_N \otimes R_{\bar{v}})\bar{v}}_{\text{Lokal: }u^l} - \underbrace{(L_{\mathcal{G}} \otimes K_x)x}_{\text{Kooperativ: }u^k}
+\end{equation}
 
+Eingesetzt und aggregiert ergibt das folgende Dyamik für das geregelte MAS und das kooperative
+interne Modell:
+\begin{align}
+    \dot{x} &= (I_N \otimes A - L_{\mathcal{G}} \otimes BK_x) x - (I_N \otimes BR_{\bar{v}})\bar{v} \\
+    \dot{\bar{v}} &= (I_N \otimes S^*)\bar{v} + (L_{\mathcal{G}}\otimes B_y C)x
+\end{align}
 
+Die Transformation auf Synchronisierungskoordinaten
+\begin{equation}
+    \tilde{x}=\begin{bmatrix}
+        x_1 \\
+        \varepsilon_x
+    \end{bmatrix}
+    = \begin{bmatrix}
+        x_1 \\ x_2-x_1 \\ \vdots \\ x_N-x_1
+    \end{bmatrix}
+\end{equation}
+erfolgt mittels $\tilde{x}=(\Theta \otimes I_n)x$, analog für $\tilde{v}$.
+
+\todo[inline]{entkopplungstrafo}
+
+\subsection{Führungsbeobachter}
+Siehe \ref{sec:koop_beob}.
+
+\pagebreak
 \section{Synchronisierung heterogener Multiagentensysteme}
 
 Um das heterogene Multiagentensystem zu synchronisieren, müssen die Agenten das \emph{kooperative Interne-Modell-Prinzip} erfüllen:
@@ -381,6 +438,7 @@ Wenn das nicht erfüllt ist, gibt es zwei Lösungsmöglichkeiten:
 
 
 \subsection{Kooperative Führungsbeobachter: Leader-Follower}
+\label{sec:koop_beob}
 
 Heterogene Agenten:
 \begin{align}
@@ -391,7 +449,7 @@ Heterogene Agenten:
 Die Synchronisierungstrajektorie wird vom Führungsagenten vorgegeben, beschrieben
 durch Signalmodell:
 \begin{align}
-    \dot{v_0} &= S_w v_0 \\
+    \dot{v}_0 &= S_w v_0 \\
     w &= Q_w v_0
 \end{align}
 (Anforderung: $(Q_w, S_w)$ beobachtbar)
@@ -520,10 +578,12 @@ Für alle Eigenwerte $s$ von $S_w$ muss gelten:
     \neq 0
 \end{equation}
 
-\subsection{Schaltende Netze}
+\pagebreak
+\section{Schaltende Netze}
 
 Schaltende Netzte modellieren wir dadurch dass wir nicht den konstanten
-Graphen $\mathcal{G}$ betrachten sondern den Graphen $\mathcal{G}_{\sigma(t)}$, wobei $\sigma(t)$ zu jedem Zeitpunkt den momentan aktiven Graphen
+Graphen $\mathcal{G}$ betrachten sondern den Graphen $\mathcal{G}_{\sigma(t)}$,
+wobei $\sigma(t)$ zu jedem Zeitpunkt den momentan aktiven Graphen
 aus einer endlichen Menge an Graphen auswählt.
 
 Hier schränken wir $\sigma(t)$ noch soweit ein dass ein Graph mindestens
@@ -558,3 +618,22 @@ Die Folgefehlerdynamik ist stabil für alle $\mu > 0$ wenn der Vereinigungsgraph
 mit Agent 0 als einzigem Wurzelknoten zusammenhängend ist und
 $\operatorname{Re}\lambda(S_w) \leq 0$.
 
+Für die Bestimmung von $\mu$ kann z.B. Eigenwertvorgabe für die
+Beobachterfehlerdynamik gemacht werden, sodass eine bestimmte
+Stabilitätsreserve eingehalten wird.
+In der Übung wurde hier dann das Statische Kommunikationsnetz
+mit $\tilde{H}$ betrachtet.
+
+Die Eigenwerte sollten über die Schur-Zerlegung von $\tilde{H}$
+bestimmt werden:
+\begin{equation}
+    T^{-1}\tilde{H}T = \begin{bmatrix}
+        \lambda_1(\tilde{H}) & &* \\
+        & \ddots & \\
+        0 & & \lambda_N(\tilde{H})
+    \end{bmatrix}
+\end{equation}
+
+\begin{equation}
+    
+\end{equation}
