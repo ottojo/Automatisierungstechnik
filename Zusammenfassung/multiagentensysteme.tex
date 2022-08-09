@@ -524,7 +524,7 @@ nichtinformierten Agenten in der Reihenfolge vorkommen.
     \item Nullzeile: Keine Verbindungen zum Führungsagenten
     \item $L_{21}$: Verbindungen Führungsagent $\rightarrow$ Informierte Agenten
     \item $L_{22}$: Verbindungen zwischen informierten Agenten
-    \item $0_{M \times N-M}$: Keine Verbindungen Nichtinformierte Agenten $\rightarrow$ Informierte Agenten \todo{muss das so?}
+    \item $0_{M \times N-M}$: Keine Verbindungen Nichtinformierte Agenten $\rightarrow$ Informierte Agenten
     \item $0_{N-M \times 1}$: Keine Verbindungen Führungsagent $\rightarrow$ Nichtinformierte Agenten
     \item $L_{32}$: Verbindungen Informierte Agenten $\rightarrow$ Nichtinformierte Agenten
     \item $\bm{L_{33}}$: Verbindungen zwischen nichtinformierten Agenten
@@ -607,9 +607,8 @@ des homogenen Führungsmodells zurückgeführt.
 
 Hier wird eine gemeinsame Verstärkung $\mu >0$ gewählt und informierte
 und Nichtinformierte Agenten gemeinsam betrachtet.
-\todo{ist das wie oben?}
 
-Für den Folgefehler $e_i = \hat{v}_i - v_0$ ergibt sich nach aggregation
+Für den Folgefehler $e_i = \hat{v}_i - v_0$ ergibt sich nach Aggregation
 \begin{equation}
     \dot{e} = (I_N \otimes S_w - \mu H_{\sigma(t)} \otimes I_{n_w}) e
 \end{equation}
@@ -631,9 +630,27 @@ bestimmt werden:
         \lambda_1(\tilde{H}) & &* \\
         & \ddots & \\
         0 & & \lambda_N(\tilde{H})
-    \end{bmatrix}
+    \end{bmatrix}=Q
 \end{equation}
 
-\begin{equation}
-    
-\end{equation}
+Dafür wird eine Ähnlichkeitstrafo mit $(T\otimes I_{n_w})$ gemacht:
+
+\begin{align}
+    &(T^{-1} \otimes I_{n_w})(I_N \otimes S_w - \mu \tilde{H} \otimes I_{n_w})(T\otimes I_{n_w}) \\
+    &= I_N \otimes S_w - \mu Q \otimes I_{n_w} \\
+    &= \begin{bmatrix}
+        S_w - \mu \lambda_1(\tilde{H}) I_{n_w} & &*\\
+        & \ddots & \\
+        0 & & S_w - \mu \lambda_N(\tilde{H}) I_{n_w}
+    \end{bmatrix}
+\end{align}
+
+Mit ein paar Rechenregeln für Determinanten und scharfem Nachdenken stellt man
+nun fest dass die kombinierten Eigenwerte der Diagonalelemente der Eigenwerte
+der ursprünglichen Beobachterfehlerdynamik entsprechen.
+
+Das eben bestimmte $\mu$ kann nun auch für den schaltenden Graphen verwendet
+werden. Die Stabilitätsreserve wird aber nicht unbedingt eingehalten, da bei der
+Bestimmung eine abweichende Topologie genutzt wurde.
+Exponentialle Stabilität und positive Stabilitätsreserve ist aber dennoch auch
+für den schaltenden Graphen garantiert.
