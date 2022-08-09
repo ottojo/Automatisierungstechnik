@@ -1,11 +1,12 @@
 \section{Zustandsbeschreibung von Petri-Netzen}
 
-Der Zustand eines Petri-Netzes wird durch einen \emph{Markierungsvektor} $m$ angegeben.
+Der Zustand eines Petri-Netzes wird durch einen \emph{Markierungsvektor} $m \in \{0,1\}^{|S|}$ angegeben.
 Das ist bei uns ein binärer Vektor der angibt welche Stellen mit Marken belegt sind.
 
-Ein Schaltvorgang wird mit einem \emph{Transitionsvektor} $t$ angegeben.
+Ein Schaltvorgang wird mit einem \emph{Transitionsvektor} $t \in \{0,1\}^{|S|}$ angegeben.
 Der Transitionsvektor enthält einen $1$-Eintrag für die schaltende Transition.
 
+\subsection{Netzmatrix}
 Die Netzmatrix beschreibt Spaltenweise den Markenfluss beim Schalten der Transitionen:
 
 \begin{equation}
@@ -20,6 +21,7 @@ Die Netzmatrix beschreibt Spaltenweise den Markenfluss beim Schalten der Transit
     \end{blockarray}
 \end{equation}
 
+\subsection{Zustandsgleichung}
 Damit kann man dann die Zustandsgleichung aufstellen:
 \begin{equation}
     m(k+1) = m(k) + N t(k)
@@ -32,6 +34,8 @@ Mit der wichtigen Nebenbedingung
 welche fordert, dass die Transition aktiviert sein muss, also alle
 Prästellen markiert und alle Poststellen unmarkiert sind, und die Transition
 durch den Eingang $u(k)$ "freigeschaltet" ist.
+
+Die Anfangsmarkierung ist $m(0)$.
 
 \section{Analyse von Petri-Netzen}
 \subsection{Zyklen: T-Invarianten}
@@ -56,3 +60,22 @@ Wenn keine toten Markierungen auftreten, ist das Netz lebendig.
 Jedes lebendige Petri-Netz besitzt mindestens einen Zyklus und damit eine T-Invariante.
 
 \subsection{Konstante Markensumme: S-Invarianten}
+Man fordert dass für jeden Zeitpunkt die gewichtete Markensumme konstant ist:
+\begin{equation}
+    \sum_{i=1}^{|S|} i_{S,i} m_i(k) = i_S^T m(k) = \text{const} \quad
+    \forall k\in \mathbb{N}_0, i_{S,i}\in \mathbb{N}_0
+\end{equation}
+mit Gewichtsvektor $i_S \in \mathbb{N}_0^{|S|}$.
+
+Induktiv bedeutet das
+\begin{equation}
+\begin{gathered}
+    i_S^Tm(k+1) = i_S^Tm(k) + i_S^TNt(k) \stackrel{!}{=} i_S^Tm(k) \\
+    \iff i_S^TN = 0
+\end{gathered}
+\end{equation}
+wobei $i_S \in \mathbb{N}_0^{|S|}$ die nichttriviale Lösung sein soll.
+Dann ist $i_S$ eine \emph{S-Invariante} des Petri-Netzes.
+
+Wenn eine S-Invariante keinen 0-Eintrag enthält, bedeutet das, dass sich die
+Anzahl der Markierungen im Petri-Netz nicht ändern kann.
