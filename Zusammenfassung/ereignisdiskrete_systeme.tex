@@ -79,3 +79,86 @@ Dann ist $i_S$ eine \emph{S-Invariante} des Petri-Netzes.
 
 Wenn eine S-Invariante keinen 0-Eintrag enthält, bedeutet das, dass sich die
 Anzahl der Markierungen im Petri-Netz nicht ändern kann.
+
+\section{Petri-Netz-Regler}
+
+
+Die Spezifikation des Reglers wird mit einer Ungleichungsbedingung
+formuliert:
+\begin{equation}
+    L m(k) \leq b, \quad k\in\mathbb{N}_0, \quad L\in\mathbb{N}_0^{n_R\times |S|}, \quad  b\in\mathbb{N}_0^{n_R}
+\end{equation}
+mit $n_R$ der Anzahl an Bedingungen (Ordnung des Reglers),
+und $\leq$ Elementweise.
+
+Der ereignisdiskrete Regler ist selbst ein Petri-Netz,
+mit Zustandsdarstellung
+\begin{equation}
+    m_R(k+1) = m_R(k)+N_Rt(K), \quad m_R \in \mathbb{N}_0^{n_R}
+\end{equation}
+, das subscript $_R$ steht für "Regler".
+
+Achtung: $t(k)$ ist auch die Transition der Strecke!\\
+Es muss gelten $N_R \in \mathbb{Z}^{n_R \times |\mathcal{T}|}$
+mit $|\mathcal{T}|$ der Anzahl an Transitionen der Strecke.
+
+Zum Reglerentwurf wird die Ungleichungsbedingung auf S-Invarianten-Vorgabe
+zurückgeführt.
+
+Man setzt
+\begin{equation}
+    Lm(k) + m_R(k) = b
+\end{equation}
+(das geht, weil $m_R(k) \in \mathbb{N}_0^{n_R}$),
+und dasst Regler und Strecke zusammen:
+\begin{equation}
+    \begin{bmatrix}
+        m(k+1)\\m_R(k+1)
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        m(k)\\m_R(k)
+    \end{bmatrix}
+    +
+    \begin{bmatrix}
+       N\\N_R 
+    \end{bmatrix}
+    t(k)
+\end{equation}
+Was dann erlaubt die Bedingung umzuschreiben zu
+\begin{equation}
+    \begin{bmatrix}
+        L&I
+    \end{bmatrix}
+    \begin{bmatrix}
+        m(k)\\r_R(k)
+    \end{bmatrix}
+    =b
+\end{equation}
+Was bedeutet dass die Zeilen von $\begin{bmatrix}
+    L&I
+\end{bmatrix}$ gerade S-Invarianten des geregelten Systems seien müssen.
+
+Für $k=0$ ergibt sich durch Einsetzen
+\begin{equation}
+    m_R(0) = b-Lm(0)
+\end{equation}
+(Was dann auch $b$ garantiert, ohne die Anfangsbedingung würden die S-Invarianten
+zwar konstantes, aber beliebiges $b$ fordern.)
+
+Um nun $N_R$ zu konstruieren wird die Definition der S-Invarianten genutzt
+(für jede Zeile, rechts steht jetzt ein Nullvektor statt Skalar):
+\begin{equation}
+    \begin{gathered}
+        \begin{bmatrix}
+            L&I
+        \end{bmatrix}
+        \begin{bmatrix}
+            N\\N_R
+        \end{bmatrix}
+        =0\\
+        \iff LN + N_R = 0 \\
+        \iff N_R = -LN
+    \end{gathered}
+\end{equation}
+
