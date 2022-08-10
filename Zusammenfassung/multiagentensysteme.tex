@@ -47,9 +47,6 @@ Elemente $n_{ij}$ der Inzidenzmatrix $N_\mathcal{G} \in \{-1,0,1\}^{N \times M}$
     \end{cases}
 \end{equation}
 
-\paragraph{Kreisfrei}
-\todo[inline]{def kreisfrei}
-
 \paragraph{Zusammenhängend}
 Ein Wurzelknoten existiert.
 \begin{itemize}
@@ -71,6 +68,7 @@ $\iff$ Laplacematrix $L_\mathcal{G}$ irreduzibel.
 \section{Systemtheorie}
 
 \subsection{Steuerbarkeit}
+\label{sec:steuerbar}
 Der Eigentwert $\lambda_i$ von $A$ ist steuerbar wenn gilt
 \begin{equation}
     \operatorname{rang}\begin{bmatrix}
@@ -92,6 +90,11 @@ Quadratische Matrix $A$:
 \end{itemize}
 
 Mit Blockmatrizen/Kronecker-Produkten funktioniert das auch.
+
+\subsection{Sonstige Sinnvolle Rechenregeln}
+\begin{itemize}
+    \item $\det(\text{Block-Diag-Matrix}) = \prod_i \det(\text{Block}_i)$
+\end{itemize}
 
 \section{Leader-Follower Zustandssynchronisierung}
 \paragraph{Leader-Follower-Matrix}
@@ -142,7 +145,7 @@ Im Hinblick auf die Netzwerktopologie findet sich der Folgefehler in der
 diffusiven Kopplung wieder:
 
 \begin{align}
-    \bar{u}_i &= \sum_{j=1}^N a_{ij} (x_i-x_j) + a_{i0}(x_ix_0) \\
+    \bar{u}_i &= \sum_{j=1}^N a_{ij} (x_i-x_j) + a_{i0}(x_i-x_0) \\
     &= \sum_{j=1}^N a_{ij} (\varepsilon_i - \varepsilon_j) + a_{i0} \varepsilon_i \\
     &= \left(e_i^T\underbrace{(L_G+L_0)}_H \otimes I_n\right)\varepsilon
 \end{align}
@@ -205,32 +208,51 @@ $\tilde{A}$ darstellen als:
 
 $K$ muss nun also so bestimmt werden, dass diese $N$ unterschiedlichen Matrizen simultan
 zu Hurwitz-Matrizen ($\operatorname{Re}\lambda < 0)$ macht.
-\todo[inline]{Fragestunde: Sind die Elemente oberhalb der Diagonalen relevant?}
 
-Notwendige Bedingung dafür ist $\det H \neq 0$ (Siehe \ref{par:leader_follower_matrix}, das
-kann man evtl am Graph sehen).
-\todo[inline]{Bedingung nachvollziehen, Seite 4-18}
+Notwendige Bedingung dafür ist $\det H \neq 0$ (Siehe \ref{par:leader_follower_matrix},
+das kann man evtl am Graph sehen).
 
 Der Riccati-Entwurf kann die simultane Stabilisierung in diesem fall immer lösen,
 was das ganze zur hinreichenden Bedingung macht.
 
+\subsection{Voraussetzungen Simultane Stabilisierung}
+\begin{itemize}
+    \item $(A,b)$ der Agenten muss stabilisierbar sein: Siehe \ref{sec:steuerbar}
+    \item Führungsagent ist Wurzelknoten des erweiterten Graphens:
+          Angeben eines Spannbaums oder zeigen dass $\det H \neq 0$
+          für die Leader-Follower Matrix.
+\end{itemize}
+
+\subsection{Zustandstransformation}
+Wenn z.B. der Abstand von Agenten untereinander geregelt wird, bietet sich eine
+Zustandstransformation an die das berücksichtigt. Wenn in der ersten Komponente
+z.B. die Position steht und jeder Agent $i$ den Abstand $\Delta x_i$ haben soll:
+\begin{equation}
+    \bar{x}_i = x_i - \begin{bmatrix}
+        \Delta x_i \\ 0
+    \end{bmatrix}
+\end{equation}
+Die $A$ Matrix etc muss dann für den neuen Zustand bestimmt werden, und im Folgenden
+wird damit dann gerechnet.
+
+
 \subsection{Entwurf Netzwerkregler}
 \label{sec:lf_nw_regler_entwurf}
-\todo[inline]{Das hier noch mal überarbeiten, nachdem es jetzt alles oberhalb gibt}
 Ziel ist ein Netzwerkregler der Form
-\begin{equation}
-    u_i = -\sum_{j=1}^N a_{ij} (Kx_i - Kx_j) - a_{i0} (Kx_i - Kx_0)
-\end{equation}
+\begin{align}
+    u_i &= -\sum_{j=1}^N a_{ij} (Kx_i - Kx_j) - a_{i0} (Kx_i - Kx_0) \\
+        &= -K(e_i^T H \otimes I_n)\varepsilon
+\end{align}
 Die Rückführmatrix $K$ bestimmt sich durch
 \begin{equation}
     K=c R^{-1} B^T P
 \end{equation}
-mit $P$ Lösung der algebraischen Riccati-Gleichung
+mit $P \in \mathbb{R}^{n\times n}$ Lösung der algebraischen Riccati-Gleichung
 \begin{equation}
     \tag{ARE}
     A^T P + P A - P B R^{-1} B^T P + Q = 0
 \end{equation}
-wobei $Q \in \mathbb{R}^{n\times n}$ und $R \in \mathbb{R}^{n\times n}$
+wobei $Q \in \mathbb{R}^{n\times n}$ und $R \in \mathbb{R}^{p\times p}$
 positiv definit, mit $n$ Dimension des Zustandes und $p$ Dimension des
 Inputs.
 
@@ -239,20 +261,35 @@ Für den Parameter $c$ muss gelten
     c \geq \frac{1}{2 \cdot \min_{i=1,\ldots,N} \operatorname{Re} \lambda_i(H)}
 \end{equation}
 
-\todo[inline]{Fertig machen (Blatt3)?}
-
+\subsection{Sonderfälle}
 \subsubsection{Sonderfall: Reduzible Kommunikationstopologie}
 Wenn die Leader-Follower-Matrix als untere ($r\times r$) Blockdiagonalmatrix
 dargestellt werden kann (evtl nach Ändern der Nummerierung der Agenten),
 können $r$ unabhängige Stabilisierungsprobleme mit $r$ unterschiedlichen
 Rückführmatrizen gelöst werden.
 
+Dabei ist zu beachten dass sich im Vergleich zum allgemeinen Fall in der
+Gleichung für $K$ nur $c$ ändert, $P$ und $B$ sind nicht vom Graph abhängig.
+
 \subsubsection{Sonderfall: Kreisfreie Kommunikationstopologie}
 Eine kreisfreie Topologie erlaubt umnummerierung sodass die
 Leader-Follower-Matrix eine untere ($N\times N$) Dreiecksmatrix ist.
 
-Dann können $N$ unterschiedliche Rückführmatrizen bestimmt werden.
-\todo[inline]{Kreisfreie Kommunikationstopologie, Eigenwertvorgabe: Blatt 3f}
+Dann können $N$ unterschiedliche Rückführmatrizen bestimmt werden:
+
+Das Fehlersystem ist jetzt
+\begin{align}
+    \dot{\varepsilon} &= (I_N \otimes A - (I_N \otimes B)\tilde{K}(H \otimes I_n))\varepsilon \\
+    &= \begin{bmatrix}
+        A-h_{11}BK_1 & & \\
+        \vdots & \ddots & \\
+        -h_N B K_N & \dots & A-H_{NN} BK_N
+    \end{bmatrix} \varepsilon
+\end{align}.
+
+Daraus folgt, dass die Stabilisierung mit unterschiedlichen Rückführmatrizen $K_i$
+gelöst werden kann, indem jeweils $(A-h_{ii}BK_i)$ stabilisiert wird.
+Das haben wir in der Übung mit Eigenwertvorgabe (Koeffizientenvergleich) gemacht.
 
 \subsection{Analyse Netzwerkregler}
 \todo[inline]{Synchronisierungs-Eigenwerte: Blatt 3g}

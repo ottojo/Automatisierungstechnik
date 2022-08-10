@@ -9,10 +9,18 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage[parfill]{parskip}
 \usepackage{bm}
+\usepackage[a4paper, margin=3cm]{geometry}
 
+% Quotes
 \MakeOuterQuote{"}
 \renewcommand{\emph}[1]{\textbf{#1}}
 \newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+
+% Start chapters on same page
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\chapter}{\if@openright\cleardoublepage\else\clearpage\fi}{}{}{}
+\makeatother
 
 \title{Zusammenfassung Automatisierungstechnik}
 \author{Jonas Otto}
@@ -22,11 +30,13 @@
 \maketitle
 \tableofcontents
 
+\pagebreak
 \chapter{Ereignisdiskrete Systeme}
-\include{ereignisdiskrete_systeme}
+\input{ereignisdiskrete_systeme}
 
+\pagebreak
 \chapter{Multi-Agenten-Systeme}
-\include{multiagentensysteme}
+\input{multiagentensysteme}
 
 
 \end{document}
