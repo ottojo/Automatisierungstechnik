@@ -22,6 +22,9 @@
 \patchcmd{\chapter}{\if@openright\cleardoublepage\else\clearpage\fi}{}{}{}
 \makeatother
 
+% Do not vertically distribute paragraphs when using pagebreak
+\raggedbottom
+
 \title{Zusammenfassung Automatisierungstechnik}
 \author{Jonas Otto}
 \date{Sommersemester 2022}

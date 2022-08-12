@@ -400,22 +400,46 @@ Hier gibt es statt Führungsagent ein Führungsmodell:
     w &= Q_w v_w
 \end{align}
 
-
-Und bei Bedarf Störmodell
-\begin{align}
-    d = P_d v
-\end{align}
+Und bei Bedarf Störmodelle $S_{d_i}$.
 
 Der Netzwerkregler für die Ausgangssynchronisierung beinhaltet die
 Dynamik des Führungsmodells und aller Störmodelle.
 Dafür baut man das kooperativ angeregtes interne Modell:
 \begin{equation}
-    \dot{\bar{v}}_i = S^*\bar{v}_i + B_y\left(\sum_{j=1}^N a_{ij} (y_i-y_j) + a_{i0} (y_i-w) \right)
+    \dot{\bar{v}}_i = S^*\bar{v}_i + B_y \sum_{j=1}^N a_{ij} (y_i-y_j)
 \end{equation}
-\todo{das ist nicht leaderless...}
 
+\begin{equation}
+    S^* = I_p \otimes S
+\end{equation}
+$S^*$ ist die $p=\dim y$ - fache Kopie von S, wobei S die Zusammenfassung des
+Führungssignalmodells und Störmodells ist. Der Zyklische Anteil bedeutet, dass jede
+Signalform nur ein mal enthalten sein soll.
 
-\todo[inline]{Internes Modell}
+\begin{equation}
+    S = \operatorname{zykl}(\operatorname{diag} (S_w, S_{d1}, \dots, S_{dN}))
+\end{equation}
+
+$B_y = \operatorname{diag}(b_1,\dots,b_p)$ muss weiterhin so gewählt werden dass 
+$(S, b_i)$ steuerbar ist.
+
+Die Voraussetzungen für erfolgreiche Ausgangssynchronisierung mit internem-Modell-Prinzip
+sind:
+
+\begin{itemize}
+    \item Graph $\mathcal{G}$ zusammenhängend
+    \item $(A,B)$ stabilisierbar
+    \item Kein EW von $S$ ist invariante Nullstelle der Agenten
+\end{itemize}
+
+Invariante Nullstellen $\eta$ werden ermittelt durch
+\begin{equation}
+    \det \begin{bmatrix}
+        A-\eta I & B \\
+        C & 0
+    \end{bmatrix} = 0
+\end{equation}
+Das System kann auch keine oder mehrere invariante Nullstellen haben.
 
 Für die Stabilisierung setzt man das Stellgesetz an in der Form
 \begin{equation}
@@ -441,7 +465,97 @@ Die Transformation auf Synchronisierungskoordinaten
 \end{equation}
 erfolgt mittels $\tilde{x}=(\Theta \otimes I_n)x$, analog für $\tilde{v}$.
 
-\todo[inline]{entkopplungstrafo}
+
+Das System kann man nun aufteilen in einen Anteil der instabil bleibt, und die
+Synchronisierungsdynamik vorgibt:
+\begin{align}
+    \dot{x}_1 &= Ax_1 - (l_{12}^T \otimes BK_x)\varepsilon_x - BR_{\bar{v}}\bar{v}_1 \\
+    \dot{\bar{v}}_1 &= S^*\bar{v}_1 + (l_{12}^T \otimes B_y C)\varepsilon_x
+\end{align}
+
+Und die Fehlerzustände, welche mittels simultaner Stabilisierung
+zu null geregelt werden sollen:
+\begin{align}
+    \dot{\varepsilon}_x &= (I_{N-1} \otimes A - L_{22} \otimes BK_x) \varepsilon_x - (I_{N-1} \otimes BR_{\bar{v}}) \varepsilon_{\bar{v}} \\
+    \dot{\varepsilon}_{\bar{v}} &= (I_{N-1} \otimes S^*) \varepsilon_{\bar{v}} + (L_{22} \otimes B_y C) \varepsilon_x
+\end{align}
+
+Das simultane Stabilisierungsproblem ist dann
+\begin{equation}
+    \check{A}_{\urcorner, ii} = \tilde{A} - \lambda_i(L_{22}) \tilde{B} \begin{bmatrix}
+        K_x & R_{\bar{v}}
+    \end{bmatrix}
+\end{equation}
+Wobei $\check{A}_{\urcorner, ii}$ Hurwitz-Matrix (alle EW links der Imaginärachse)
+sein soll für alle $\lambda_i(L_{22})$, mit
+\begin{align}
+    \tilde{A} &= \begin{bmatrix}
+        A & 0 \\
+        B_y C & S^*
+    \end{bmatrix} \\
+    \tilde{B} &= \begin{bmatrix}
+        B \\ 0
+    \end{bmatrix}
+\end{align}
+
+Das kann man mit ARE-Entwurf machen für das $(\varepsilon_x, \varepsilon_{\bar{v}})$-System:
+\begin{equation}
+    \begin{bmatrix}
+        K_x & R_{\bar{v}}
+    \end{bmatrix}
+    = cR^{-1}\tilde{B}^TP
+\end{equation}
+Mit $P$ Lösung der ARE
+\begin{equation}
+    \tilde{A}^TP + P\tilde{A}-P\tilde{B}R^{-1}\tilde{B}^TP+Q = 0
+\end{equation}
+und
+\begin{equation}
+    c \geq \frac{1}{2 \min (\operatorname{Re} \lambda_i(L_{22}))}
+\end{equation}
+
+
+Die Synchronisierungstrajektorie ergibts sich dann als
+\begin{equation}
+    \begin{bmatrix}
+        \dot{x}_s \\ \dot{\bar{v}}_s
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        A & -BR_{\bar{v}} \\
+        0 & S^*
+    \end{bmatrix}
+    \begin{bmatrix}
+        x_s \\ \bar{v}_s
+    \end{bmatrix}
+\end{equation}
+
+Da in $\dot{x}_s$ die (eventuell instabile) Agentendynamik $A$ enthalten ist, kann es
+sinnvoll sein eine lokale Stabilisierung zu machen:
+
+\begin{align}
+    u_i &= -K_l x_i + \bar{u}_i \\
+    \dot{x}_i &= \underbrace{(A-BK_l)}_{\text{Neue Dynamikmatrix }\tilde{A}_l}x_i + B\bar{u}_i
+\end{align}
+
+Was dann in der Synchronisierungstrajektorie
+\begin{equation}
+    \begin{bmatrix}
+        \dot{x}_s \\ \dot{\bar{v}}_s
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        \tilde{A}_l & -BR_{\bar{v}} \\
+        0 & S^*
+    \end{bmatrix}
+    \begin{bmatrix}
+        x_s \\ \bar{v}_s
+    \end{bmatrix}
+\end{equation}
+resultiert. Das $\tilde{A}_l$ muss aber auch im Entwurf berücksichtigt werden!
+
+\todo[inline]{Stellgesetz: Warum steht da in 4i xi-xj statt nur xj?}
+\todo[inline]{entkopplungstrafo?}
 
 \subsection{Führungsbeobachter}
 Siehe \ref{sec:koop_beob}.
