@@ -32,9 +32,10 @@ Die Laplacematrix berechnet sich aus Gradmatrix $D$ und
 Adjazenzmatrix $A$.
 
 \begin{itemize}
-    \item $L_\mathcal{G}$ hat nur einfachen EW 0 $\iff$ Graph zusammenhängend
+    \item Ein Eigenwert von $L_\mathcal{G}$ bei 0 ist einfach $\iff$ Graph zusammenhängend
     \item $\operatorname{rang} L_\mathcal{G} = N-1$ ($N$ Knoten) $\iff$ Graph zusammenhängend
     \item Die Aussagen bzgl. Reduktion der Adjazenzmatrix gelten auch für die Laplacematrix.
+    \item Das Laplacespektrum ist die Menge der Eigenwerte von $L_\mathcal{G}$.
 \end{itemize}
 
 \paragraph{Inzidenzmatrix}
@@ -46,12 +47,13 @@ Elemente $n_{ij}$ der Inzidenzmatrix $N_\mathcal{G} \in \{-1,0,1\}^{N \times M}$
         0,  & \text{sonst}
     \end{cases}
 \end{equation}
+Jede Spalte stellt dabei eine Kante dar.
 
 \paragraph{Zusammenhängend}
 Ein Wurzelknoten existiert.
 \begin{itemize}
     \item $\iff$ Adjazenzmatrix $A_\mathcal{G}$ irreduzibel.
-    \item $\iff$ $L_\mathcal{G}$ hat nur einfachen EW 0
+    \item $\iff$ Ein Eigenwert von $L_\mathcal{G}$ bei 0 ist einfach
 \end{itemize}
 
 
@@ -358,6 +360,9 @@ Zur Bestimmung genügen die constraints
 Dies folgt von der Herleitung über die \emph{invariante Trajektorie}, für die
 Unabhängigkeit von $K$ gefordert wird.
 
+Nur \emph{Wurzelagenten} können einen Beitrag zur 
+Synchronisierungstrajektorie leisten!
+
 \subsection{Entwurf Netzwerkregler}
 
 \subsubsection{Bedingung}
@@ -381,6 +386,8 @@ wobei $L_{22}$ folgt aus
 \end{equation}
 
 $\det L_{22} \neq 0$ folgt auch direkt daraus, dass der Graph zusammenhängend ist.
+
+Außerdem muss $(A,b)$ steuerbar und stabilisierbar sein.
 
 \subsubsection{Entwurf}
 Bestimmung von $K$ wie in \ref{sec:lf_nw_regler_entwurf},
@@ -420,11 +427,11 @@ Signalform nur ein mal enthalten sein soll.
     S = \operatorname{zykl}(\operatorname{diag} (S_w, S_{d1}, \dots, S_{dN}))
 \end{equation}
 
-$B_y = \operatorname{diag}(b_1,\dots,b_p)$ muss weiterhin so gewählt werden dass 
-$(S, b_i)$ steuerbar ist.
+\underline{$B_y = \operatorname{diag}(b_1,\dots,b_p)$} muss weiterhin so gewählt werden dass
+\underline{$(S, b_i)$ steuerbar} ist.
 
-Die Voraussetzungen für erfolgreiche Ausgangssynchronisierung mit internem-Modell-Prinzip
-sind:
+Die \emph{Voraussetzungen} für erfolgreiche Ausgangssynchronisierung
+mit internem-Modell-Prinzip sind:
 
 \begin{itemize}
     \item Graph $\mathcal{G}$ zusammenhängend
@@ -441,13 +448,13 @@ Invariante Nullstellen $\eta$ werden ermittelt durch
 \end{equation}
 Das System kann auch keine oder mehrere invariante Nullstellen haben.
 
-Für die Stabilisierung setzt man das Stellgesetz an in der Form
+Für die Stabilisierung setzt man das \emph{Stellgesetz} an in der Form
 \begin{equation}
     u=\underbrace{-(I_N \otimes R_{\bar{v}})\bar{v}}_{\text{Lokal: }u^l} - \underbrace{(L_{\mathcal{G}} \otimes K_x)x}_{\text{Kooperativ: }u^k}
 \end{equation}
 
-Eingesetzt und aggregiert ergibt das folgende Dyamik für das geregelte MAS und das kooperative
-interne Modell:
+Eingesetzt und aggregiert ergibt das folgende \emph{Dyamik für das geregelte MAS} und das
+\emph{kooperative interne Modell}:
 \begin{align}
     \dot{x} &= (I_N \otimes A - L_{\mathcal{G}} \otimes BK_x) x - (I_N \otimes BR_{\bar{v}})\bar{v} \\
     \dot{\bar{v}} &= (I_N \otimes S^*)\bar{v} + (L_{\mathcal{G}}\otimes B_y C)x
@@ -467,7 +474,7 @@ erfolgt mittels $\tilde{x}=(\Theta \otimes I_n)x$, analog für $\tilde{v}$.
 
 
 Das System kann man nun aufteilen in einen Anteil der instabil bleibt, und die
-Synchronisierungsdynamik vorgibt:
+\emph{Synchronisierungsdynamik} vorgibt:
 \begin{align}
     \dot{x}_1 &= Ax_1 - (l_{12}^T \otimes BK_x)\varepsilon_x - BR_{\bar{v}}\bar{v}_1 \\
     \dot{\bar{v}}_1 &= S^*\bar{v}_1 + (l_{12}^T \otimes B_y C)\varepsilon_x
@@ -500,10 +507,12 @@ sein soll für alle $\lambda_i(L_{22})$, mit
 
 Das kann man mit ARE-Entwurf machen für das $(\varepsilon_x, \varepsilon_{\bar{v}})$-System:
 \begin{equation}
+    \boxed{
     \begin{bmatrix}
         K_x & R_{\bar{v}}
     \end{bmatrix}
     = cR^{-1}\tilde{B}^TP
+    }
 \end{equation}
 Mit $P$ Lösung der ARE
 \begin{equation}

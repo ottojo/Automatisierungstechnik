@@ -45,7 +45,7 @@ Ein Zyklus kann so definiert werden:
 \end{equation}
 Oder äquivalent
 \begin{equation}
-    N \sum_{\kappa=0}^{k_z-1} t(\kappa) = N i_T = 0
+    N \sum_{\kappa=0}^{k_z-1} t(\kappa) = \boxed{N i_T = 0}
 \end{equation}
 
 Wenn jetzt also so ein passendes $i_T$ (ganzzahlig, $>0$) existiert,
@@ -71,14 +71,15 @@ Induktiv bedeutet das
 \begin{equation}
 \begin{gathered}
     i_S^Tm(k+1) = i_S^Tm(k) + i_S^TNt(k) \stackrel{!}{=} i_S^Tm(k) \\
-    \iff i_S^TN = 0
+    \iff \boxed{i_S^TN = 0}
 \end{gathered}
 \end{equation}
 wobei $i_S \in \mathbb{N}_0^{|S|}$ die nichttriviale Lösung sein soll.
 Dann ist $i_S$ eine \emph{S-Invariante} des Petri-Netzes.
 
-Wenn eine S-Invariante keinen 0-Eintrag enthält, bedeutet das, dass sich die
-Anzahl der Markierungen im Petri-Netz nicht ändern kann.
+Wenn eine \underline{S-Invariante keinen 0-Eintrag enthält},
+bedeutet das, dass die Anzahl der Markierungen im Petri-Netz
+\underline{konstant ist}.
 
 \section{Petri-Netz-Regler}
 
@@ -131,7 +132,7 @@ Was dann erlaubt die Bedingung umzuschreiben zu
         L&I
     \end{bmatrix}
     \begin{bmatrix}
-        m(k)\\r_R(k)
+        m(k)\\m_R(k)
     \end{bmatrix}
     =b
 \end{equation}
@@ -141,7 +142,7 @@ Was bedeutet dass die Zeilen von $\begin{bmatrix}
 
 Für $k=0$ ergibt sich durch Einsetzen
 \begin{equation}
-    m_R(0) = b-Lm(0)
+    \boxed{m_R(0) = b-Lm(0)}
 \end{equation}
 (Was dann auch $b$ garantiert, ohne die Anfangsbedingung würden die S-Invarianten
 zwar konstantes, aber beliebiges $b$ fordern.)
@@ -158,6 +159,6 @@ Um nun $N_R$ zu konstruieren wird die Definition der S-Invarianten genutzt
         \end{bmatrix}
         =0\\
         \iff LN + N_R = 0 \\
-        \iff N_R = -LN
+        \boxed{\iff N_R = -LN}
     \end{gathered}
 \end{equation}
