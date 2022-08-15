@@ -6,7 +6,7 @@ Die Gradmatrix $D_\mathcal{G}$ enthält auf der Hauptdiagonalen den Eingangsgrad
 Die Adjazenzmatrix $A_\mathcal{G}$ enthält im Element $a_{ij}$
 das Kantengewicht der Kante $(j \rightarrow i)$.
 
-Die Adjazenzmatrix eines nicht stark zusammenhängenden Graphens ist reduzibel.
+Die Adjazenzmatrix eines nicht stark zusammenhängenden Graphen ist reduzibel.
 Eine Matrix ist reduzibel, wenn mittels Permutationsmatrix $P$ gilt
 \begin{equation}
     PMP^T = \begin{bmatrix}
@@ -365,7 +365,7 @@ Damit sich eine Rückführmatrix $K$ bestimmen lässt, muss gelten
 \begin{equation}
     \operatorname{Re} \lambda_i(L_{22}) > 0
 \end{equation}
-bzw
+bzw.
 \begin{equation}
     \det L_{22} \neq 0
 \end{equation}
@@ -389,11 +389,20 @@ aber mit $L_{22}$ statt H.
 
 \pagebreak
 \section{Leader-Follower Ausgangssynchronisierung}
-\todo[inline]{Leader-Follower Ausgangssynchronisierung}
+\subsection{Kooperativ angeregtes Internes Modell}
+Das kann man so machen wie Leaderless mit internem Modell
+(\ref{sec:leaderless_ausgang_internes_modell}).
+Beim Riccati Entwurf muss für die Berechnung $H$ statt $L_{22}$ verwendet
+werden.
+
+\subsection{Führungsbeobachter}
+\todo[inline]{LF Ausgangssync mit FB}
 
 \pagebreak
 \section{Leaderless Ausgangssynchronisierung}
+\label{sec:leaderless_ausgang}
 \subsection{Kooperativ angeregtes Internes Modell}
+\label{sec:leaderless_ausgang_internes_modell}
 Hier gibt es statt Führungsagent ein Führungsmodell:
 \begin{align}
     \dot{v}_w &= S_w v_w \\
@@ -445,8 +454,9 @@ Für die Stabilisierung setzt man das Stellgesetz an in der Form
 \begin{equation}
     u=\underbrace{-(I_N \otimes R_{\bar{v}})\bar{v}}_{\text{Lokal: }u^l} - \underbrace{(L_{\mathcal{G}} \otimes K_x)x}_{\text{Kooperativ: }u^k}
 \end{equation}
+\todo[inline]{nicht-aggregierte form}
 
-Eingesetzt und aggregiert ergibt das folgende Dyamik für das geregelte MAS und das kooperative
+Eingesetzt und aggregiert ergibt das folgende Dynamik für das geregelte MAS und das kooperative
 interne Modell:
 \begin{align}
     \dot{x} &= (I_N \otimes A - L_{\mathcal{G}} \otimes BK_x) x - (I_N \otimes BR_{\bar{v}})\bar{v} \\
@@ -515,7 +525,7 @@ und
 \end{equation}
 
 
-Die Synchronisierungstrajektorie ergibts sich dann als
+Die Synchronisierungstrajektorie ergibt sich dann als
 \begin{equation}
     \begin{bmatrix}
         \dot{x}_s \\ \dot{\bar{v}}_s
@@ -554,9 +564,6 @@ Was dann in der Synchronisierungstrajektorie
 \end{equation}
 resultiert. Das $\tilde{A}_l$ muss aber auch im Entwurf berücksichtigt werden!
 
-\todo[inline]{Stellgesetz: Warum steht da in 4i xi-xj statt nur xj?}
-\todo[inline]{entkopplungstrafo?}
-
 \subsection{Führungsbeobachter}
 Siehe \ref{sec:koop_beob}.
 
@@ -579,7 +586,7 @@ Gemeinsame Teildynamik $A_s$ mit Ausgang $C_s$.
     \end{bmatrix}
 \end{equation}
 
-Bem: Notwendig (aber nicht hinreichend) dafür ist, dass die Agenten gleiche Eigenwerte haben.
+Bemerkung: Notwendig (aber nicht hinreichend) dafür ist, dass die Agenten gleiche Eigenwerte haben.
 
 Wenn das nicht erfüllt ist, gibt es zwei Lösungsmöglichkeiten:
 \begin{enumerate}
