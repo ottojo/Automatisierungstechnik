@@ -93,6 +93,47 @@ Quadratische Matrix $A$:
 
 Mit Blockmatrizen/Kronecker-Produkten funktioniert das auch.
 
+\subsection{Signalmodelle}
+\subsubsection{Konstant}
+\begin{align}
+    \dot{v} &= 0 \\
+    v(t) &= v(0) = c \\
+    \sigma &= \{0\}
+\end{align}
+
+\subsubsection{Rampe}
+\begin{align}
+    \dot{v} &= \begin{bmatrix}
+        0 & 1 \\
+        0 & 0
+    \end{bmatrix} v \\
+    v(0) &= \begin{bmatrix}
+        a \\ b
+    \end{bmatrix} \\
+    v(t) &= \begin{bmatrix}
+        b \cdot t + a \\
+        b
+    \end{bmatrix} \\
+    \sigma &= \{0, 0\}
+\end{align}
+
+\subsubsection{Sinus}
+\begin{align}
+    \dot{v} &= \begin{bmatrix}
+        0 & \omega \\
+        -\omega & 0
+    \end{bmatrix} v \\
+    v(0) &= \begin{bmatrix}
+        \sin(\varphi_1) \\
+        \cos(\varphi_2)
+    \end{bmatrix} \\
+    v(t) &= \begin{bmatrix}
+        \sin(\omega t + \varphi_1) \\
+        \cos(\omega t + \varphi_2)
+    \end{bmatrix} \\
+    \sigma &= \{+j\omega, -j\omega\}
+\end{align}
+
 \subsection{Sonstige Sinnvolle Rechenregeln}
 \begin{itemize}
     \item $\det(\text{Block-Diag-Matrix}) = \prod_i \det(\text{Block}_i)$
@@ -436,8 +477,11 @@ Signalform nur ein mal enthalten sein soll.
     S = \operatorname{zykl}(\operatorname{diag} (S_w, S_{d1}, \dots, S_{dN}))
 \end{equation}
 
-\underline{$B_y = \operatorname{diag}(b_1,\dots,b_p)$} muss weiterhin so gewählt werden dass
-\underline{$(S, b_i)$ steuerbar} ist.
+\underline{$B_y = \operatorname{diag}(b_1,\dots,b_p)$} mit Spaltenvektoren $b_i$
+muss weiterhin so gewählt werden dass \underline{$(S, b_i)$ steuerbar} ist.
+Für Sinus- und Rampensignale kann üblicherweise $\begin{bmatrix}
+    0 & 1
+\end{bmatrix}^T$ gewählt werden.
 
 Die \emph{Voraussetzungen} für erfolgreiche Ausgangssynchronisierung
 mit internem-Modell-Prinzip sind:
@@ -458,10 +502,10 @@ Invariante Nullstellen $\eta$ werden ermittelt durch
 Das System kann auch keine oder mehrere invariante Nullstellen haben.
 
 Für die Stabilisierung setzt man das \emph{Stellgesetz} an in der Form
-\begin{equation}
-    u=\underbrace{-(I_N \otimes R_{\bar{v}})\bar{v}}_{\text{Lokal: }u^l} - \underbrace{(L_{\mathcal{G}} \otimes K_x)x}_{\text{Kooperativ: }u^k}
-\end{equation}
-\todo[inline]{nicht-aggregierte form}
+\begin{align}
+    u&=\underbrace{-(I_N \otimes R_{\bar{v}})\bar{v}}_{\text{Lokal: }u^l} - \underbrace{(L_{\mathcal{G}} \otimes K_x)x}_{\text{Kooperativ: }u^k} \\
+    u_i &= -R_{\bar{v}} \bar{v}_i - \sum_{j=1}^N a_{ij}K_x (x_i -x_j)
+\end{align}
 
 Eingesetzt und aggregiert ergibt das folgende \emph{Dynamik für das geregelte MAS} und das
 \emph{kooperative interne Modell}:
