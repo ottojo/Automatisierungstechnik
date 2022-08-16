@@ -381,8 +381,9 @@ folgt dann nach Transformation auf Synchronisierungskoordinaten die
 \end{equation}
 
 \paragraph{Stellgesetz}
-
-\todo[inline]{Nachvollziehen, vgl mit leader-follower}
+\begin{equation}
+    u_i = -K \sum_{j=1}^N a_{ij}(x_i-x_j)
+\end{equation}
 
 \subsection{Synchronisierungstrajektorie}
 Der Netzwerkregler stellt sicher dass die Agenten gegen die Synchronisierungstrajektorie
@@ -444,7 +445,8 @@ Beim Riccati Entwurf muss für die Berechnung $H$ statt $L_{22}$ verwendet
 werden.
 
 \subsection{Führungsbeobachter}
-\todo[inline]{LF Ausgangssync mit FB}
+In \ref{sec:koop_beob} ist angegeben wie das mit heterogenen Agenten funktioniert,
+das geht natürlich auch hier.
 
 \pagebreak
 \section{Leaderless Ausgangssynchronisierung}
