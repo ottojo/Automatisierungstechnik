@@ -290,7 +290,7 @@ Die Rückführmatrix $K$ bestimmt sich durch
 \begin{equation}
     K=c R^{-1} B^T P
 \end{equation}
-mit $P \in \mathbb{R}^{n\times n}$ Lösung der algebraischen Riccati-Gleichung
+mit $P \in \mathbb{R}^{n\times n}$ (symmetrisch) Lösung der algebraischen Riccati-Gleichung
 \begin{equation}
     \tag{ARE}
     A^T P + P A - P B R^{-1} B^T P + Q = 0
@@ -567,7 +567,7 @@ Das kann man mit ARE-Entwurf machen für das $(\varepsilon_x, \varepsilon_{\bar{
     = cR^{-1}\tilde{B}^TP
     }
 \end{equation}
-Mit $P$ Lösung der ARE
+Mit $P$ (symmetrisch) Lösung der ARE
 \begin{equation}
     \tilde{A}^TP + P\tilde{A}-P\tilde{B}R^{-1}\tilde{B}^TP+Q = 0
 \end{equation}
@@ -748,7 +748,7 @@ mit
 \begin{equation}
     \bar{c} \geq \frac{1}{2 \min_{i}\operatorname{Re} \lambda_i(L_{33})}
 \end{equation}
-und $\bar{P}$ als Lösung der ARE
+und $\bar{P}$ (symmetrisch) als Lösung der ARE
 \begin{equation}
     S_w \bar{P} + \bar{P} S_w^T - \bar{P} Q_w^T \bar{R}^{-1} Q_w \bar{P} + \bar{Q} = 0
 \end{equation}
