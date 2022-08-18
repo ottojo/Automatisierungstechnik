@@ -1,0 +1,17 @@
+name: CI
+
+on: 
+  push:
+    branches:
+      - master
+
+jobs:
+  latex:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set up Git repository
+      uses: actions/checkout@v4
+    - name: Compile and Deploy LaTeX to PDF
+      uses: SoPra-Team-17/latex-action@master
+    - name: GitHub Pages Deploy
+      uses: maxheld83/ghpages@v0.2.1
